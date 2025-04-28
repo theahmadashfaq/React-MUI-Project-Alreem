@@ -92,6 +92,7 @@ function App() {
                 <MenuIcon />
               </IconButton>
             )}
+            
             <Box sx={{ flexGrow: 1 }}>
               <Navbar />
             </Box>

@@ -8,13 +8,18 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer";
+import CloseIcon from '@mui/icons-material/Close';
 import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import { Link } from "react-router-dom";
-import Grid from "@mui/material/Grid";
 
 export const Sidebar = () => {
     const [open, setOpen] = useState(false);
+    
+    // Properly toggle the drawer state
     const toggleDrawer = () => setOpen(!open);
+    
+    // Close the drawer
+    const closeDrawer = () => setOpen(false);
 
     const SidebarContent = () => (
         <Box
@@ -22,9 +27,25 @@ export const Sidebar = () => {
                 minWidth: "300px",
                 backgroundColor: "#212121",
                 color: "#EEE692",
-                minHeight: "100vh"
+                minHeight: "100vh",
+                position: "relative"
             }}
         >
+            {/* Close icon only for mobile drawer */}
+            <IconButton
+                onClick={closeDrawer}
+                sx={{ 
+                    color: "#EEE692",
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    display: { xs: 'block', md: 'none' },
+                    zIndex: 1210
+                }}
+            >
+                <CloseIcon />
+            </IconButton>
+            
             {/* Logo */}
             <Box
                 sx={{
@@ -350,43 +371,48 @@ export const Sidebar = () => {
     );
 
     return (
-        <Grid container>
-            
-            <Grid item xs={12} sx={{ display: { xs: 'block', md: 'none' } }}>
-                <IconButton
-                    onClick={toggleDrawer}
-                    sx={{ 
-                        color: "#EEE692", 
-                        marginTop: 10,
-                        position: "fixed",
-                        zIndex: 1200,
-                        backgroundColor: "rgba(33, 33, 33, 0.7)",
-                        "&:hover": {
-                            backgroundColor: "rgba(33, 33, 33, 0.9)",
-                        }
-                    }}
-                >
-                    <DensityMediumIcon />
-                </IconButton>
-            </Grid>
+        <>
+            {/* Main menu button for mobile that opens the drawer */}
+            <IconButton
+                onClick={toggleDrawer}
+               
+                sx={{ 
+                    color: "#EEE692", 
+                    position: "fixed",
+                    top: 10,
+                    left: 10,
+                    zIndex: 1200,
+                    backgroundColor: "rgba(33, 33, 33, 0.7)",
+                    "&:hover": {
+                        backgroundColor: "rgba(33, 33, 33, 0.9)",
+                    },
+                    display: { xs: 'flex', md: 'none' }
+                }}
+            >
+                <DensityMediumIcon />
+            </IconButton>
 
-            {/* Sidebar for desktop - hidden on small screens */}
-            <Grid item sx={{ display: { xs: 'none', md: 'block' } }}>
+            {/* Permanent sidebar for desktop */}
+            <Box sx={{ 
+                display: { xs: 'none', md: 'block' },
+                position: 'fixed',
+                height: '100vh',
+                zIndex: 1100
+            }}>
                 <SidebarContent />
-            </Grid>
+            </Box>
 
             {/* Drawer for mobile view */}
             <Drawer 
                 anchor="left" 
                 open={open} 
-                onClose={toggleDrawer}
+                onClose={closeDrawer}
                 sx={{
-                    display: { xs: 'none', md: 'none' },
-                   width:"100px"
+                    '& .MuiDrawer-paper': { width: '100%' }  // Make drawer full width on mobile
                 }}
             >
                 <SidebarContent />
             </Drawer>
-        </Grid>
+        </>
     );
 };
